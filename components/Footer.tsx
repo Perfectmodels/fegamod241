@@ -1,7 +1,10 @@
 
-import React from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { NAV_LINKS } from '../constants';
+import { getSettings } from '../services/firebaseService';
+import { SiteSettings } from '../types';
 
 const SocialIcon: React.FC<{ children: React.ReactNode; href: string }> = ({ children, href }) => (
     <a href={href} target="_blank" rel="noopener noreferrer" className="text-off-white/80 hover:text-metallic-gold transition-colors duration-300">
@@ -10,6 +13,20 @@ const SocialIcon: React.FC<{ children: React.ReactNode; href: string }> = ({ chi
 );
 
 const Footer: React.FC = () => {
+  const [settings, setSettings] = useState<SiteSettings | null>(null);
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const settingsData = await getSettings();
+        setSettings(settingsData);
+      } catch (error) {
+        console.error("Failed to load settings for footer:", error);
+      }
+    };
+    fetchSettings();
+  }, []);
+
   return (
     <footer className="bg-deep-black text-off-white/80 pt-16 pb-8">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -26,11 +43,16 @@ const Footer: React.FC = () => {
           <div>
             <h3 className="font-serif text-lg text-off-white mb-4">Navigation</h3>
             <ul className="space-y-2">
-              {NAV_LINKS.slice(0, 5).map(link => (
+              {NAV_LINKS.slice(0, 6).map(link => (
                 <li key={link.name}>
                   <Link to={link.path} className="hover:text-metallic-gold transition-colors duration-300">{link.name}</Link>
                 </li>
               ))}
+              <li className="pt-2 mt-2 border-t border-off-white/10">
+                  <Link to="/admin/login" className="hover:text-metallic-gold transition-colors duration-300">
+                      Accès Panel Admin
+                  </Link>
+              </li>
             </ul>
           </div>
 
@@ -38,9 +60,9 @@ const Footer: React.FC = () => {
           <div>
             <h3 className="font-serif text-lg text-off-white mb-4">Contact</h3>
             <ul className="space-y-2 mb-4">
-                <li>contact@fegamod.ga</li>
-                <li>+241 01 23 45 67</li>
-                <li>Libreville, Gabon</li>
+                <li>{settings?.email || 'contact@fegamod.ga'}</li>
+                <li>{settings?.phone || '+241 01 23 45 67'}</li>
+                <li>{settings?.address || 'Libreville, Gabon'}</li>
             </ul>
             <div className="flex space-x-4">
                 <SocialIcon href="#">

@@ -1,9 +1,9 @@
-
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { MOCK_ARTICLES } from '../constants';
+import { getArticles } from '../services/firebaseService';
 import { Article } from '../types';
 import SectionTitle from '../components/SectionTitle';
+import Loading from '../components/Loading';
 
 const ArticleCard: React.FC<{ article: Article }> = ({ article }) => (
   <div className="bg-white rounded-lg shadow-lg overflow-hidden group flex flex-col">
@@ -22,6 +22,25 @@ const ArticleCard: React.FC<{ article: Article }> = ({ article }) => (
 );
 
 const NewsPage: React.FC = () => {
+  const [articles, setArticles] = useState<Article[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const loadArticles = async () => {
+      try {
+        const data = await getArticles();
+        setArticles(data);
+      } catch (err) {
+        setError("Impossible de charger les actualités.");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadArticles();
+  }, []);
+
   return (
     <div className="bg-off-white py-20">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -29,15 +48,17 @@ const NewsPage: React.FC = () => {
          <p className="text-center max-w-3xl mx-auto text-gray-700 text-lg mb-12">
             Plongez au cœur de la mode gabonaise avec nos articles, interviews et communiqués de presse. Restez informé des dernières tendances et des nouvelles de la fédération.
         </p>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {MOCK_ARTICLES.map(article => (
-            <ArticleCard key={article.id} article={article} />
-          ))}
-          {/* Duplicate for more content */}
-           {MOCK_ARTICLES.map(article => (
-            <ArticleCard key={article.id + 10} article={{...article, id: article.id+10, imageUrl: article.imageUrl + '&v=2'}} />
-          ))}
-        </div>
+        {loading ? (
+          <Loading message="Chargement des actualités..." />
+        ) : error ? (
+          <p className="text-center text-red-500">{error}</p>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {articles.map(article => (
+              <ArticleCard key={article.id} article={article} />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

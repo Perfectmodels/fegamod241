@@ -1,7 +1,8 @@
-import React from 'react';
-import { MOCK_PARTNERS } from '../constants';
+import React, { useState, useEffect } from 'react';
+import { getPartners } from '../services/firebaseService';
 import { Partner } from '../types';
 import SectionTitle from '../components/SectionTitle';
+import Loading from '../components/Loading';
 
 const PartnerLogo: React.FC<{ partner: Partner }> = ({ partner }) => (
   <div className="bg-white rounded-lg shadow-md overflow-hidden grayscale hover:grayscale-0 transition-all duration-300">
@@ -10,6 +11,25 @@ const PartnerLogo: React.FC<{ partner: Partner }> = ({ partner }) => (
 );
 
 const PartnersPage: React.FC = () => {
+  const [partners, setPartners] = useState<Partner[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const loadPartners = async () => {
+      try {
+        const data = await getPartners();
+        setPartners(data);
+      } catch (err) {
+        setError("Impossible de charger les partenaires.");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadPartners();
+  }, []);
+
   return (
     <div className="bg-off-white py-20 bg-pattern">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -18,11 +38,17 @@ const PartnersPage: React.FC = () => {
             La réussite de nos actions repose sur le soutien précieux de nos partenaires institutionnels et privés. Nous les remercions pour leur confiance et leur engagement à nos côtés.
         </p>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
-          {MOCK_PARTNERS.map(partner => (
-            <PartnerLogo key={partner.id} partner={partner} />
-          ))}
-        </div>
+        {loading ? (
+          <Loading message="Chargement des partenaires..." />
+        ) : error ? (
+          <p className="text-center text-red-500">{error}</p>
+        ) : (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
+            {partners.map(partner => (
+              <PartnerLogo key={partner.id} partner={partner} />
+            ))}
+          </div>
+        )}
         
         <section className="mt-24 py-16 bg-white rounded-lg shadow-xl">
             <div className="container mx-auto px-4 text-center">

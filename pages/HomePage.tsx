@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { MOCK_EVENTS, MOCK_ARTICLES } from '../constants';
+import { getEvents, getArticles } from '../services/firebaseService';
+import { Event, Article } from '../types';
 import { MOCK_GALLERY_IMAGES } from '../gallery-constants';
 import SectionTitle from '../components/SectionTitle';
+import FashionActorsMarquee from '../components/FashionActorsMarquee';
+import Loading from '../components/Loading';
 
 const Hero: React.FC = () => (
   <div className="relative h-[85vh] min-h-[600px] flex items-center justify-center text-center text-white bg-deep-black">
@@ -30,6 +33,28 @@ const Hero: React.FC = () => (
 );
 
 const HomePage: React.FC = () => {
+  const [events, setEvents] = useState<Event[]>([]);
+  const [articles, setArticles] = useState<Article[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [eventsData, articlesData] = await Promise.all([
+          getEvents(),
+          getArticles()
+        ]);
+        setEvents(eventsData);
+        setArticles(articlesData);
+      } catch (error) {
+        console.error("Failed to fetch homepage data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
   return (
     <div className="bg-off-white">
       <Hero />
@@ -61,20 +86,22 @@ const HomePage: React.FC = () => {
       <section className="py-20">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <SectionTitle subtitle="Calendrier">Événements à Venir</SectionTitle>
-          <div className="grid md:grid-cols-3 gap-8">
-            {MOCK_EVENTS.slice(0, 3).map(event => (
-              <div key={event.id} className="bg-white rounded-lg shadow-lg overflow-hidden group transform hover:-translate-y-2 transition-transform duration-300">
-                <img src={event.imageUrl} alt={event.title} className="w-full h-56 object-cover"/>
-                <div className="p-6">
-                  <p className="text-sm text-emerald font-semibold mb-2">{event.date} • {event.location}</p>
-                  <h3 className="font-serif text-2xl font-bold mb-3">{event.title}</h3>
-                  <Link to="/evenements" className="font-bold text-deep-black hover:text-metallic-gold transition-colors duration-300 group-hover:text-metallic-gold">
-                    Voir les détails <span className="inline-block transition-transform group-hover:translate-x-2 ml-1">→</span>
-                  </Link>
+          {loading ? <Loading message="Chargement..." /> : (
+            <div className="grid md:grid-cols-3 gap-8">
+              {events.slice(0, 3).map(event => (
+                <div key={event.id} className="bg-white rounded-lg shadow-lg overflow-hidden group transform hover:-translate-y-2 transition-transform duration-300">
+                  <img src={event.imageUrl} alt={event.title} className="w-full h-56 object-cover"/>
+                  <div className="p-6">
+                    <p className="text-sm text-emerald font-semibold mb-2">{event.date} • {event.location}</p>
+                    <h3 className="font-serif text-2xl font-bold mb-3">{event.title}</h3>
+                    <Link to="/evenements" className="font-bold text-deep-black hover:text-metallic-gold transition-colors duration-300 group-hover:text-metallic-gold">
+                      Voir les détails <span className="inline-block transition-transform group-hover:translate-x-2 ml-1">→</span>
+                    </Link>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
@@ -82,22 +109,26 @@ const HomePage: React.FC = () => {
       <section className="py-20 bg-gray-50 bg-pattern">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <SectionTitle subtitle="Notre Blog">Actualités de la Mode</SectionTitle>
-          <div className="grid lg:grid-cols-3 gap-8">
-            {MOCK_ARTICLES.slice(0, 3).map(article => (
-              <div key={article.id} className="bg-white rounded-lg shadow-lg overflow-hidden group">
-                <img src={article.imageUrl} alt={article.title} className="w-full h-56 object-cover"/>
-                <div className="p-6">
-                  <p className="text-sm text-gray-500 mb-2">{article.category} • {article.date}</p>
-                  <h3 className="font-serif text-xl font-bold mb-4 h-16">{article.title}</h3>
-                  <Link to="/actualites" className="font-bold text-emerald hover:text-metallic-gold transition-colors duration-300">
-                    Lire la suite <span className="inline-block transition-transform group-hover:translate-x-2 ml-1">→</span>
-                  </Link>
+           {loading ? <Loading message="Chargement..." /> : (
+            <div className="grid lg:grid-cols-3 gap-8">
+              {articles.slice(0, 3).map(article => (
+                <div key={article.id} className="bg-white rounded-lg shadow-lg overflow-hidden group">
+                  <img src={article.imageUrl} alt={article.title} className="w-full h-56 object-cover"/>
+                  <div className="p-6">
+                    <p className="text-sm text-gray-500 mb-2">{article.category} • {article.date}</p>
+                    <h3 className="font-serif text-xl font-bold mb-4 h-16">{article.title}</h3>
+                    <Link to="/actualites" className="font-bold text-emerald hover:text-metallic-gold transition-colors duration-300">
+                      Lire la suite <span className="inline-block transition-transform group-hover:translate-x-2 ml-1">→</span>
+                    </Link>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+           )}
         </div>
       </section>
+
+      <FashionActorsMarquee />
     </div>
   );
 };

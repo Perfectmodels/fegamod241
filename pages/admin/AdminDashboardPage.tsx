@@ -1,5 +1,7 @@
-import React, { useEffect, useRef } from 'react';
-import { FULL_MEMBER_DATA } from './member-data';
+import React, { useEffect, useRef, useState } from 'react';
+import { getFullMembersData } from '../../services/firebaseService';
+import { FullMemberData } from '../../types';
+import Loading from '../../components/Loading';
 
 // This Chart type definition is needed because we're using a CDN
 declare global {
@@ -18,19 +20,21 @@ const StatCard: React.FC<{ title: string; value: string; icon: React.ReactNode }
     </div>
 );
 
-const DashboardCharts: React.FC = () => {
+const DashboardCharts: React.FC<{ members: FullMemberData[] }> = ({ members }) => {
     const categoryChartRef = useRef<HTMLCanvasElement | null>(null);
     const revenueChartRef = useRef<HTMLCanvasElement | null>(null);
     const chartInstances = useRef<{ category?: any; revenue?: any }>({});
 
     useEffect(() => {
-        const categoryCounts: { [key: string]: number } = FULL_MEMBER_DATA.reduce((acc, member) => {
+        if (!members.length) return;
+
+        const categoryCounts: { [key: string]: number } = members.reduce((acc, member) => {
             const category = member.category || 'Non spécifié';
             acc[category] = (acc[category] || 0) + 1;
             return acc;
         }, {} as { [key: string]: number });
 
-        const revenueCounts: { [key: string]: number } = FULL_MEMBER_DATA.reduce((acc, member) => {
+        const revenueCounts: { [key: string]: number } = members.reduce((acc, member) => {
             const revenue = member.revenue || 'Non spécifié';
             acc[revenue] = (acc[revenue] || 0) + 1;
             return acc;
@@ -96,7 +100,7 @@ const DashboardCharts: React.FC = () => {
             if (chartInstances.current.revenue) chartInstances.current.revenue.destroy();
         };
 
-    }, []);
+    }, [members]);
 
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-12">
@@ -114,13 +118,35 @@ const DashboardCharts: React.FC = () => {
 
 
 const AdminDashboardPage: React.FC = () => {
+    const [members, setMembers] = useState<FullMemberData[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        const loadData = async () => {
+            try {
+                const data = await getFullMembersData();
+                setMembers(data);
+            } catch (err) {
+                setError("Impossible de charger les données du tableau de bord.");
+                console.error(err);
+            } finally {
+                setLoading(false);
+            }
+        };
+        loadData();
+    }, []);
+
+    if (loading) return <Loading message="Chargement du tableau de bord..." />;
+    if (error) return <p className="text-red-500">{error}</p>;
+
     return (
         <div>
             <h1 className="font-serif text-4xl font-bold text-deep-black mb-8">Tableau de bord</h1>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                  <StatCard 
                     title="Membres Actifs" 
-                    value={FULL_MEMBER_DATA.length.toString()} 
+                    value={members.length.toString()} 
                     icon={<svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M15 21a6 6 0 00-9-5.197M15 21a6 6 0 006-6v-1a6 6 0 00-9-5.197" /></svg>} 
                 />
                  <StatCard 
@@ -140,7 +166,7 @@ const AdminDashboardPage: React.FC = () => {
                 />
             </div>
             
-            <DashboardCharts />
+            <DashboardCharts members={members} />
 
             <div className="mt-12 bg-white p-6 rounded-lg shadow-md">
                 <h2 className="font-serif text-2xl font-bold text-deep-black mb-4">Activité Récente</h2>

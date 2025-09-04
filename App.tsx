@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Routes, Route, useLocation, Outlet, Navigate } from 'react-router-dom';
 import Header from './components/Header';
@@ -5,20 +6,28 @@ import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
 import AboutPage from './pages/AboutPage';
 import MembersPage from './pages/MembersPage';
+import MemberDetailPage from './pages/MemberDetailPage';
 import EventsPage from './pages/EventsPage';
 import NewsPage from './pages/NewsPage';
 import PartnersPage from './pages/PartnersPage';
 import GalleryPage from './pages/GalleryPage';
 import ContactPage from './pages/ContactPage';
+import FirebasePage from './pages/FirebasePage';
 
 // Admin Imports
 import AdminLayout from './components/admin/AdminLayout';
 import AdminLoginPage from './pages/admin/AdminLoginPage';
 import AdminDashboardPage from './pages/admin/AdminDashboardPage';
 import AdminMembersPage from './pages/admin/AdminMembersPage';
+import AdminMemberDetailPage from './pages/admin/AdminMemberDetailPage';
 import AdminEventsPage from './pages/admin/AdminEventsPage';
 import AdminNewsPage from './pages/admin/AdminNewsPage';
-import { AdminMediaPage, AdminPartnersPage, AdminUsersPage, AdminSettingsPage } from './pages/admin/AdminPlaceholders';
+// FIX: Replaced incorrect import from './pages/admin/AdminPlaceholders' with correct individual imports. The AdminPlaceholders.tsx file was empty and not a module.
+import AdminMediaPage from './pages/admin/AdminMediaPage';
+import AdminPartnersPage from './pages/admin/AdminPartnersPage';
+import AdminUsersPage from './pages/admin/AdminUsersPage';
+import AdminSettingsPage from './pages/admin/AdminSettingsPage';
+import { isAuthenticated } from './services/authService';
 
 // Public Layout
 const PublicLayout: React.FC = () => (
@@ -31,12 +40,16 @@ const PublicLayout: React.FC = () => (
   </div>
 );
 
+// Protected Route for Admin
+const ProtectedRoute: React.FC = () => {
+    return isAuthenticated() ? <AdminLayout /> : <Navigate to="/admin/login" replace />;
+};
+
 
 const App: React.FC = () => {
   const location = useLocation();
 
   React.useEffect(() => {
-    // Scroll to top on route change, except for admin routes for a better UX
     if (!location.pathname.startsWith('/admin')) {
       window.scrollTo(0, 0);
     }
@@ -49,6 +62,7 @@ const App: React.FC = () => {
         <Route path="/" element={<HomePage />} />
         <Route path="/a-propos" element={<AboutPage />} />
         <Route path="/membres" element={<MembersPage />} />
+        <Route path="/membres/:id" element={<MemberDetailPage />} />
         <Route path="/evenements" element={<EventsPage />} />
         <Route path="/actualites" element={<NewsPage />} />
         <Route path="/partenaires" element={<PartnersPage />} />
@@ -58,16 +72,18 @@ const App: React.FC = () => {
 
       {/* Admin Routes */}
       <Route path="/admin/login" element={<AdminLoginPage />} />
-      <Route path="/admin" element={<AdminLayout />}>
-        <Route index element={<AdminDashboardPage />} />
-        <Route path="dashboard" element={<Navigate to="/admin" replace />} />
-        <Route path="members" element={<AdminMembersPage />} />
-        <Route path="events" element={<AdminEventsPage />} />
-        <Route path="news" element={<AdminNewsPage />} />
-        <Route path="media" element={<AdminMediaPage />} />
-        <Route path="partners" element={<AdminPartnersPage />} />
-        <Route path="users" element={<AdminUsersPage />} />
-        <Route path="settings" element={<AdminSettingsPage />} />
+      <Route element={<ProtectedRoute />}>
+        <Route path="/admin" element={<AdminDashboardPage />} />
+        <Route path="/admin/dashboard" element={<Navigate to="/admin" replace />} />
+        <Route path="/admin/members" element={<AdminMembersPage />} />
+        <Route path="/admin/members/:id" element={<AdminMemberDetailPage />} />
+        <Route path="/admin/events" element={<AdminEventsPage />} />
+        <Route path="/admin/news" element={<AdminNewsPage />} />
+        <Route path="/admin/media" element={<AdminMediaPage />} />
+        <Route path="/admin/partners" element={<AdminPartnersPage />} />
+        <Route path="/admin/users" element={<AdminUsersPage />} />
+        <Route path="/admin/settings" element={<AdminSettingsPage />} />
+        <Route path="/admin/integration-data" element={<FirebasePage />} />
       </Route>
     </Routes>
   );

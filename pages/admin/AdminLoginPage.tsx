@@ -1,14 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { signInWithEmail } from '../../services/authService';
 
 const AdminLoginPage: React.FC = () => {
   const navigate = useNavigate();
+  const [email, setEmail] = useState('admin@fegamod.ga');
+  const [password, setPassword] = useState('password');
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real app, you'd have authentication logic here.
-    // For this prototype, we'll just navigate to the dashboard.
-    navigate('/admin');
+    setLoading(true);
+    setError(null);
+
+    try {
+      await signInWithEmail(email, password);
+      navigate('/admin');
+    } catch (err: any) {
+      setError(err.message);
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -19,6 +33,7 @@ const AdminLoginPage: React.FC = () => {
             <p className="mt-2 text-gray-600">Connectez-vous à votre tableau de bord</p>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleLogin}>
+          {error && <p className="text-red-500 text-center font-semibold p-2 bg-red-50 rounded-md">{error}</p>}
           <div className="space-y-4">
             <div>
               <label htmlFor="email-address" className="sr-only">Email address</label>
@@ -30,7 +45,8 @@ const AdminLoginPage: React.FC = () => {
                 required
                 className="w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-500 focus:outline-none focus:ring-emerald focus:border-emerald sm:text-sm"
                 placeholder="Adresse email"
-                defaultValue="admin@fegamod.ga"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
             <div>
@@ -43,7 +59,8 @@ const AdminLoginPage: React.FC = () => {
                 required
                 className="w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-500 focus:outline-none focus:ring-emerald focus:border-emerald sm:text-sm"
                 placeholder="Mot de passe"
-                defaultValue="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
               />
             </div>
           </div>
@@ -51,9 +68,10 @@ const AdminLoginPage: React.FC = () => {
           <div>
             <button
               type="submit"
-              className="w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-emerald hover:bg-emerald/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald transition-colors duration-300"
+              disabled={loading}
+              className="w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-emerald hover:bg-emerald/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald transition-colors duration-300 disabled:bg-emerald/50 disabled:cursor-not-allowed"
             >
-              Se connecter
+              {loading ? 'Connexion...' : 'Se connecter'}
             </button>
           </div>
         </form>

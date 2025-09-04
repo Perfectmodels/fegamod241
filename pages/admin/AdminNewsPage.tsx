@@ -1,18 +1,40 @@
 import React, { useState, useEffect } from 'react';
-import { MOCK_ARTICLES } from '../../constants';
 import { Article } from '../../types';
+import { getArticles, addArticle, updateArticle, deleteArticle } from '../../services/firebaseService';
+import Loading from '../../components/Loading';
 
 declare global {
   interface Window { tinymce: any; }
 }
 
 const AdminNewsPage: React.FC = () => {
-    const [articles, setArticles] = useState<Article[]>(MOCK_ARTICLES);
+    const [articles, setArticles] = useState<Article[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
     const [view, setView] = useState<'list' | 'editor'>('list');
-    const [currentArticle, setCurrentArticle] = useState<Article | null>(null);
+    const [currentArticle, setCurrentArticle] = useState<Omit<Article, 'id'> | Article | null>(null);
+    
+    const fetchArticles = async () => {
+        setLoading(true);
+        try {
+            const data = await getArticles();
+            setArticles(data);
+            setError(null);
+        } catch (err) {
+            setError("Impossible de charger les articles.");
+            console.error(err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchArticles();
+    }, []);
 
     useEffect(() => {
         if (view === 'editor') {
+            const initialContent = currentArticle && 'content' in currentArticle ? currentArticle.content : '';
             window.tinymce?.init({
                 selector: '#article-editor',
                 plugins: [
@@ -24,12 +46,12 @@ const AdminNewsPage: React.FC = () => {
                 menubar: false,
                 tinycomments_mode: 'embedded',
                 tinycomments_author: 'FEGAMOD Admin',
-                mergetags_list: [
-                  { value: 'First.Name', title: 'First Name' },
-                  { value: 'Email', title: 'Email' },
-                ],
-                ai_request: (request, respondWith) => respondWith.string(() => Promise.reject('See docs to implement AI Assistant')),
                 uploadcare_public_key: '812670d2519c7d4d843c',
+                setup: (editor: any) => {
+                    editor.on('init', () => {
+                        editor.setContent(initialContent);
+                    });
+                }
             });
         } else {
             window.tinymce?.get('article-editor')?.remove();
@@ -38,11 +60,10 @@ const AdminNewsPage: React.FC = () => {
         return () => {
             window.tinymce?.get('article-editor')?.remove();
         };
-    }, [view]);
+    }, [view, currentArticle]);
 
     const handleAddNew = () => {
         setCurrentArticle({
-            id: Date.now(),
             title: '',
             excerpt: '',
             content: '',
@@ -58,28 +79,35 @@ const AdminNewsPage: React.FC = () => {
         setView('editor');
     };
 
-    const handleDelete = (id: number) => {
+    const handleDelete = async (id: string) => {
         if (window.confirm('Êtes-vous sûr de vouloir supprimer cet article?')) {
-            setArticles(prev => prev.filter(a => a.id !== id));
+            try {
+                await deleteArticle(id);
+                await fetchArticles(); // Refresh list
+            } catch (err) {
+                alert("Erreur lors de la suppression de l'article.");
+            }
         }
     };
     
-    const handleSave = () => {
+    const handleSave = async () => {
         if (!currentArticle) return;
         
         const editorContent = window.tinymce.get('article-editor').getContent();
-        const articleToSave = { ...currentArticle, content: editorContent };
-
-        const index = articles.findIndex(a => a.id === articleToSave.id);
-        if (index > -1) {
-            const updatedArticles = [...articles];
-            updatedArticles[index] = articleToSave;
-            setArticles(updatedArticles);
-        } else {
-            setArticles([articleToSave, ...articles]);
+        const articleData = { ...currentArticle, content: editorContent };
+        
+        try {
+            if ('id' in articleData) {
+                await updateArticle(articleData.id, articleData);
+            } else {
+                await addArticle(articleData);
+            }
+            await fetchArticles();
+            setView('list');
+            setCurrentArticle(null);
+        } catch(err) {
+             alert("Erreur lors de l'enregistrement de l'article.");
         }
-        setView('list');
-        setCurrentArticle(null);
     };
 
     const handleCancel = () => {
@@ -97,7 +125,7 @@ const AdminNewsPage: React.FC = () => {
         return (
             <div>
                 <h1 className="font-serif text-4xl font-bold text-deep-black mb-8">
-                    {articles.some(a => a.id === currentArticle.id) ? 'Modifier l\'article' : 'Rédiger un article'}
+                    {'id' in currentArticle ? 'Modifier l\'article' : 'Rédiger un article'}
                 </h1>
                 <div className="bg-white p-6 rounded-lg shadow-md space-y-4">
                     <div>
@@ -142,31 +170,33 @@ const AdminNewsPage: React.FC = () => {
                 </button>
             </div>
             <div className="bg-white p-6 rounded-lg shadow-md">
-                <table className="w-full text-left">
-                    <thead className="border-b-2 border-gray-200">
-                        <tr>
-                            <th className="p-3 text-sm font-semibold tracking-wide">Titre</th>
-                            <th className="p-3 text-sm font-semibold tracking-wide">Catégorie</th>
-                            <th className="p-3 text-sm font-semibold tracking-wide">Date</th>
-                            <th className="p-3 text-sm font-semibold tracking-wide">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {articles.map(article => (
-                            <tr key={article.id} className="border-b border-gray-100 hover:bg-gray-50">
-                                <td className="p-3 font-bold">{article.title}</td>
-                                <td className="p-3 text-gray-700">{article.category}</td>
-                                <td className="p-3 text-gray-700">{article.date}</td>
-                                <td className="p-3">
-                                    <div className="flex space-x-4">
-                                        <button onClick={() => handleEdit(article)} className="text-gray-500 hover:text-emerald">Éditer</button>
-                                        <button onClick={() => handleDelete(article.id)} className="text-gray-500 hover:text-red-600">Supprimer</button>
-                                    </div>
-                                </td>
+                {loading ? <Loading message="Chargement..." /> : error ? <p className="text-red-500">{error}</p> : (
+                    <table className="w-full text-left">
+                        <thead className="border-b-2 border-gray-200">
+                            <tr>
+                                <th className="p-3 text-sm font-semibold tracking-wide">Titre</th>
+                                <th className="p-3 text-sm font-semibold tracking-wide">Catégorie</th>
+                                <th className="p-3 text-sm font-semibold tracking-wide">Date</th>
+                                <th className="p-3 text-sm font-semibold tracking-wide">Actions</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {articles.map(article => (
+                                <tr key={article.id} className="border-b border-gray-100 hover:bg-gray-50">
+                                    <td className="p-3 font-bold">{article.title}</td>
+                                    <td className="p-3 text-gray-700">{article.category}</td>
+                                    <td className="p-3 text-gray-700">{article.date}</td>
+                                    <td className="p-3">
+                                        <div className="flex space-x-4">
+                                            <button onClick={() => handleEdit(article)} className="text-gray-500 hover:text-emerald">Éditer</button>
+                                            <button onClick={() => handleDelete(article.id)} className="text-gray-500 hover:text-red-600">Supprimer</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                )}
             </div>
         </div>
     );

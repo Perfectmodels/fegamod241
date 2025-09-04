@@ -1,8 +1,8 @@
-
-import React from 'react';
-import { MOCK_EVENTS } from '../constants';
+import React, { useState, useEffect } from 'react';
+import { getEvents } from '../services/firebaseService';
 import { Event } from '../types';
 import SectionTitle from '../components/SectionTitle';
+import Loading from '../components/Loading';
 
 const EventCard: React.FC<{ event: Event, index: number }> = ({ event, index }) => (
   <div className={`flex flex-col md:flex-row items-center bg-white rounded-lg shadow-lg overflow-hidden my-8 ${index % 2 === 1 ? 'md:flex-row-reverse' : ''}`}>
@@ -22,6 +22,26 @@ const EventCard: React.FC<{ event: Event, index: number }> = ({ event, index }) 
 );
 
 const EventsPage: React.FC = () => {
+  const [events, setEvents] = useState<Event[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const loadEvents = async () => {
+      try {
+        const data = await getEvents();
+        setEvents(data);
+      } catch (err) {
+        setError("Impossible de charger les événements.");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadEvents();
+  }, []);
+
+
   return (
     <div className="bg-off-white py-20 bg-pattern">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -30,11 +50,17 @@ const EventsPage: React.FC = () => {
             Ne manquez aucun rendez-vous de la mode gabonaise. Retrouvez ici tous les événements organisés par FEGAMOD et ses partenaires.
         </p>
 
-        <div>
-          {MOCK_EVENTS.map((event, index) => (
-            <EventCard key={event.id} event={event} index={index} />
-          ))}
-        </div>
+        {loading ? (
+          <Loading message="Chargement des événements..." />
+        ) : error ? (
+          <p className="text-center text-red-500">{error}</p>
+        ) : (
+          <div>
+            {events.map((event, index) => (
+              <EventCard key={event.id} event={event} index={index} />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

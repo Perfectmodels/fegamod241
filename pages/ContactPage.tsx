@@ -1,6 +1,9 @@
 
-import React from 'react';
+
+import React, { useState, useEffect } from 'react';
 import SectionTitle from '../components/SectionTitle';
+import { getSettings } from '../services/firebaseService';
+import { SiteSettings } from '../types';
 
 const InfoCard: React.FC<{ icon: React.ReactNode; title: string; children: React.ReactNode }> = ({ icon, title, children }) => (
     <div className="text-center p-6 bg-white rounded-lg shadow-md">
@@ -14,6 +17,20 @@ const InfoCard: React.FC<{ icon: React.ReactNode; title: string; children: React
 
 
 const ContactPage: React.FC = () => {
+    const [settings, setSettings] = useState<SiteSettings | null>(null);
+
+    useEffect(() => {
+        const fetchSettings = async () => {
+            try {
+                const settingsData = await getSettings();
+                setSettings(settingsData);
+            } catch (error) {
+                console.error("Failed to load settings for contact page:", error);
+            }
+        };
+        fetchSettings();
+    }, []);
+
   return (
     <div className="bg-off-white py-20 bg-pattern">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -46,11 +63,11 @@ const ContactPage: React.FC = () => {
           {/* Info */}
           <div className="space-y-8">
             <InfoCard title="Adresse du Siège" icon={<svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>}>
-                <p>Centre-ville, Libreville, Gabon</p>
+                <p>{settings?.address || 'Centre-ville, Libreville, Gabon'}</p>
             </InfoCard>
             <InfoCard title="Email & Téléphone" icon={<svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>}>
-                <p>contact@fegamod.ga</p>
-                <p>+241 01 23 45 67</p>
+                <p>{settings?.email || 'contact@fegamod.ga'}</p>
+                <p>{settings?.phone || '+241 01 23 45 67'}</p>
             </InfoCard>
              <div className="h-64 bg-gray-300 rounded-lg shadow-md flex items-center justify-center text-gray-500">
                 Emplacement de la carte Google Maps
