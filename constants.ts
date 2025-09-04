@@ -28,9 +28,9 @@ export const MOCK_EVENTS: Event[] = [
 ];
 
 export const MOCK_ARTICLES: Article[] = [
-  { id: 1, title: 'Tendance 2024: Le retour du pagne tissé', excerpt: 'Explorez comment les designers gabonais réinventent cet héritage textile avec audace et modernité.', imageUrl: MOCK_GALLERY_IMAGES[9], category: 'Tendances', date: '12 JUIL 2024' },
-  { id: 2, title: 'Interview avec Franck Evina, icône de la mode', excerpt: 'Le fondateur de la marque "Racines" partage son parcours inspirant et sa vision pour l\'avenir de la mode africaine.', imageUrl: MOCK_GALLERY_IMAGES[10], category: 'Interviews', date: '08 JUIL 2024' },
-  { id: 3, title: 'FEGAMOD annonce ses nouveaux partenariats', excerpt: 'La fédération s\'associe à des acteurs majeurs pour renforcer le soutien aux créateurs locaux et leur visibilité.', imageUrl: MOCK_GALLERY_IMAGES[11], category: 'Communiqués', date: '01 JUIL 2024' },
+  { id: 1, title: 'Tendance 2024: Le retour du pagne tissé', excerpt: 'Explorez comment les designers gabonais réinventent cet héritage textile avec audace et modernité.', content: '<p>Explorez comment les designers gabonais réinventent cet héritage textile avec audace et modernité.</p>', imageUrl: MOCK_GALLERY_IMAGES[9], category: 'Tendances', date: '12 JUIL 2024' },
+  { id: 2, title: 'Interview avec Franck Evina, icône de la mode', excerpt: 'Le fondateur de la marque "Racines" partage son parcours inspirant et sa vision pour l\'avenir de la mode africaine.', content: '<p>Le fondateur de la marque "Racines" partage son parcours inspirant et sa vision pour l\'avenir de la mode africaine.</p>', imageUrl: MOCK_GALLERY_IMAGES[10], category: 'Interviews', date: '08 JUIL 2024' },
+  { id: 3, title: 'FEGAMOD annonce ses nouveaux partenariats', excerpt: 'La fédération s\'associe à des acteurs majeurs pour renforcer le soutien aux créateurs locaux et leur visibilité.', content: '<p>La fédération s\'associe à des acteurs majeurs pour renforcer le soutien aux créateurs locaux et leur visibilité.</p>', imageUrl: MOCK_GALLERY_IMAGES[11], category: 'Communiqués', date: '01 JUIL 2024' },
 ];
 
 export const MOCK_FOUNDERS: Founder[] = [
