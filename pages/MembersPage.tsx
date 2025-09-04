@@ -1,4 +1,5 @@
 
+
 import React from 'react';
 import { MOCK_MEMBERS } from '../constants';
 import { Member } from '../types';
@@ -15,7 +16,7 @@ const SocialIcon: React.FC<{ platform: 'instagram' | 'facebook' | 'twitter'; hre
 };
 
 const MemberCard: React.FC<{ member: Member }> = ({ member }) => (
-  <div className="group relative overflow-hidden rounded-lg shadow-lg">
+  <div className="group relative overflow-hidden rounded-lg shadow-lg aspect-[3/4]">
     <img src={member.imageUrl} alt={member.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
     <div className="absolute inset-0 bg-gradient-to-t from-deep-black/80 via-transparent to-deep-black/20"></div>
     <div className="absolute bottom-0 left-0 p-6 w-full">
@@ -31,6 +32,8 @@ const MemberCard: React.FC<{ member: Member }> = ({ member }) => (
 );
 
 const MembersPage: React.FC = () => {
+  const categories = [...new Set(MOCK_MEMBERS.map(member => member.category))].sort();
+
   return (
     <div className="bg-off-white py-20">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -38,10 +41,19 @@ const MembersPage: React.FC = () => {
         <p className="text-center max-w-3xl mx-auto text-gray-700 text-lg mb-12">
             Découvrez les visages qui façonnent la mode gabonaise. Stylistes, mannequins, créateurs et photographes, explorez notre réseau de professionnels passionnés.
         </p>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {MOCK_MEMBERS.map(member => (
-            <MemberCard key={member.id} member={member} />
+        
+        <div className="space-y-16">
+          {categories.map(category => (
+            <section key={category}>
+              <h2 className="font-serif text-3xl font-bold text-deep-black mb-8 pb-2 border-b-2 border-emerald">{category}s</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                {MOCK_MEMBERS
+                  .filter(member => member.category === category)
+                  .map(member => (
+                    <MemberCard key={member.id} member={member} />
+                  ))}
+              </div>
+            </section>
           ))}
         </div>
 
