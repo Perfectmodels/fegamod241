@@ -23,11 +23,11 @@ const Sidebar: React.FC = () => {
         <div className="w-64 bg-deep-black text-off-white flex flex-col min-h-screen">
             <div className="p-4 border-b border-gray-700">
                 <Link to="/admin" className="flex items-center space-x-2">
-                    <svg width="40" height="40" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="100" cy="100" r="100" fill="#F9F9F9"/>
-                        <path d="M70 50 L100 150 L130 50" stroke="#007F5C" strokeWidth="15" strokeLinecap="round" strokeLinejoin="round"/>
-                        <path d="M80 100 H120" stroke="#D4AF37" strokeWidth="15" strokeLinecap="round"/>
-                    </svg>
+                    <img 
+                        src="https://scontent.flbv4-1.fna.fbcdn.net/v/t39.30808-6/473677977_9128296503952662_8897451079006998067_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeF15cwlhZa3g07xq8eJZJn_0kSjya3bNOHSRKPJrds04ShhLQu6TtldL5jFLqDcu7ESrlXo6BRF8_GsYUW-19SI&_nc_ohc=YqYKcRYF5DAQ7kNvwHWSaUe&_nc_oc=Adned4RCPgvNp4Q5mvomLWNxgz2jSsDHSMXjFHVXZYcxS6lOSlxFdEbJXvHsH700q30&_nc_zt=23&_nc_ht=scontent.flbv4-1.fna&_nc_gid=tAF9UE47VMF8_0c2QO1M2g&oh=00_AfYfSzd3BQt0PGZwDFqjM-hYsZviBMMzICyf6U-AtKE1yA&oe=68BECA2C"
+                        alt="FEGAMOD Logo"
+                        className="h-10 w-10 object-contain"
+                    />
                     <span className="font-serif text-xl font-bold">FEGAMOD Admin</span>
                 </Link>
             </div>

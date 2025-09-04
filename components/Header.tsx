@@ -1,16 +1,6 @@
-
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { NAV_LINKS } from '../constants';
-
-const Logo: React.FC = () => (
-  <svg width="60" height="60" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="100" cy="100" r="100" fill="#0A0A0A"/>
-    <path d="M70 50 L100 150 L130 50" stroke="#007F5C" strokeWidth="15" strokeLinecap="round" strokeLinejoin="round"/>
-    <path d="M80 100 H120" stroke="#D4AF37" strokeWidth="15" strokeLinecap="round"/>
-  </svg>
-);
-
 
 const Header: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -26,7 +16,11 @@ const Header: React.FC = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           <NavLink to="/" className="flex items-center space-x-3 group">
-            <Logo />
+            <img 
+              src="https://scontent.flbv4-1.fna.fbcdn.net/v/t39.30808-6/473677977_9128296503952662_8897451079006998067_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeF15cwlhZa3g07xq8eJZJn_0kSjya3bNOHSRKPJrds04ShhLQu6TtldL5jFLqDcu7ESrlXo6BRF8_GsYUW-19SI&_nc_ohc=YqYKcRYF5DAQ7kNvwHWSaUe&_nc_oc=Adned4RCPgvNp4Q5mvomLWNxgz2jSsDHSMXjFHVXZYcxS6lOSlxFdEbJXvHsH700q30&_nc_zt=23&_nc_ht=scontent.flbv4-1.fna&_nc_gid=tAF9UE47VMF8_0c2QO1M2g&oh=00_AfYfSzd3BQt0PGZwDFqjM-hYsZviBMMzICyf6U-AtKE1yA&oe=68BECA2C" 
+              alt="FEGAMOD Logo" 
+              className="h-16 w-16 object-contain"
+            />
             <span className="font-serif text-2xl font-bold text-deep-black group-hover:text-emerald transition-colors duration-300">FEGAMOD</span>
           </NavLink>
 
