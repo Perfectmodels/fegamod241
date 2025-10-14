@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { getFullMemberById } from '../../services/firebaseService';
+import { getFullMemberById } from '../../services/neonService';
 import { FullMemberData } from '../../types';
 import Loading from '../../components/Loading';
 

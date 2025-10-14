@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { getFullMembersData } from '../../services/firebaseService';
+import { getFullMembersData } from '../../services/neonService';
 import { FullMemberData } from '../../types';
 import Loading from '../../components/Loading';
 

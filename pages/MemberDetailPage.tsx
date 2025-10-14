@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { getMemberById } from '../services/firebaseService';
+import { getMemberById } from '../services/neonService';
 import { Member } from '../types';
 import { MOCK_GALLERY_IMAGES } from '../gallery-constants';
 import SectionTitle from '../components/SectionTitle';

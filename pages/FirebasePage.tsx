@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import SectionTitle from '../components/SectionTitle';
-import { seedDatabase } from '../services/firebaseService';
+import { seedDatabase } from '../services/neonService';
 
 const FirebasePage: React.FC = () => {
     const [loading, setLoading] = useState(false);

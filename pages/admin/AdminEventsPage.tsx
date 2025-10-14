@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { getEvents, addEvent, updateEvent, deleteEvent } from '../../services/firebaseService';
+import { getEvents, addEvent, updateEvent, deleteEvent } from '../../services/neonService';
 import { Event } from '../../types';
 import Loading from '../../components/Loading';
 import AdminModal from '../../components/admin/AdminModal';

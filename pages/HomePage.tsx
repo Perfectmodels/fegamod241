@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { getEvents, getArticles } from '../services/firebaseService';
+import { getEvents, getArticles } from '../services/neonService';
 import { Event, Article } from '../types';
 import { MOCK_GALLERY_IMAGES } from '../gallery-constants';
 import SectionTitle from '../components/SectionTitle';

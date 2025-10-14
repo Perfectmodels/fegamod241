@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getPartners } from '../services/firebaseService';
+import { getPartners } from '../services/neonService';
 import { Partner } from '../types';
 import SectionTitle from '../components/SectionTitle';
 import Loading from '../components/Loading';

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { getSettings, updateSettings } from '../../services/firebaseService';
+import { getSettings, updateSettings } from '../../services/neonService';
 import { SiteSettings } from '../../types';
 import Loading from '../../components/Loading';
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getMembers } from '../services/firebaseService';
+import { getMembers } from '../services/neonService';
 
 const FashionActorsMarquee: React.FC = () => {
     const [memberNames, setMemberNames] = useState<string[]>([]);

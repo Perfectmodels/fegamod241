@@ -27,6 +27,7 @@ import AdminMediaPage from './pages/admin/AdminMediaPage';
 import AdminPartnersPage from './pages/admin/AdminPartnersPage';
 import AdminUsersPage from './pages/admin/AdminUsersPage';
 import AdminSettingsPage from './pages/admin/AdminSettingsPage';
+import AdminBureauPage from './pages/admin/AdminBureauPage';
 import { isAuthenticated } from './services/authService';
 
 // Public Layout
@@ -81,6 +82,7 @@ const App: React.FC = () => {
         <Route path="/admin/news" element={<AdminNewsPage />} />
         <Route path="/admin/media" element={<AdminMediaPage />} />
         <Route path="/admin/partners" element={<AdminPartnersPage />} />
+        <Route path="/admin/bureau" element={<AdminBureauPage />} />
         <Route path="/admin/users" element={<AdminUsersPage />} />
         <Route path="/admin/settings" element={<AdminSettingsPage />} />
         <Route path="/admin/integration-data" element={<FirebasePage />} />

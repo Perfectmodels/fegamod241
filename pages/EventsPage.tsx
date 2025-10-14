@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getEvents } from '../services/firebaseService';
+import { getEvents } from '../services/neonService';
 import { Event } from '../types';
 import SectionTitle from '../components/SectionTitle';
 import Loading from '../components/Loading';

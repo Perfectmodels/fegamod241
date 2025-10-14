@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Article } from '../../types';
-import { getArticles, addArticle, updateArticle, deleteArticle } from '../../services/firebaseService';
+import { getArticles, addArticle, updateArticle, deleteArticle } from '../../services/neonService';
 import Loading from '../../components/Loading';
 
 declare global {

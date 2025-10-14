@@ -3,8 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { NAV_LINKS } from '../constants';
-import { getSettings } from '../services/firebaseService';
-import { SiteSettings } from '../types';
+import { getSettings } from '../services/neonService';
+import type { SiteSettings } from '../types';
 
 const SocialIcon: React.FC<{ children: React.ReactNode; href: string }> = ({ children, href }) => (
     <a href={href} target="_blank" rel="noopener noreferrer" className="text-off-white/80 hover:text-metallic-gold transition-colors duration-300">

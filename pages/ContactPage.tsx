@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import SectionTitle from '../components/SectionTitle';
-import { getSettings } from '../services/firebaseService';
+import { getSettings } from '../services/neonService';
 import { SiteSettings } from '../types';
 
 const InfoCard: React.FC<{ icon: React.ReactNode; title: string; children: React.ReactNode }> = ({ icon, title, children }) => (

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { getMembers } from '../services/firebaseService';
+import { getMembers } from '../services/neonService';
 import { Member } from '../types';
 import SectionTitle from '../components/SectionTitle';
 import Loading from '../components/Loading';

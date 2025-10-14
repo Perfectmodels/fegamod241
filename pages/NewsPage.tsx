@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { getArticles } from '../services/firebaseService';
+import { getArticles } from '../services/neonService';
 import { Article } from '../types';
 import SectionTitle from '../components/SectionTitle';
 import Loading from '../components/Loading';
