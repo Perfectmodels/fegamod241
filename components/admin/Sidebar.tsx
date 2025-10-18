@@ -32,7 +32,7 @@ const Sidebar: React.FC = () => {
             <div className="p-4 border-b border-gray-700">
                 <Link to="/admin" className="flex items-center space-x-2">
                     <img 
-                        src="https://scontent.flbv4-1.fna.fbcdn.net/v/t39.30808-6/473677977_9128296503952662_8897451079006998067_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeF15cwlhZa3g07xq8eJZJn_0kSjya3bNOHSRKPJrds04ShhLQu6TtldL5jFLqDcu7ESrlXo6BRF8_GsYUW-19SI&_nc_ohc=YqYKcRYF5DAQ7kNvwHWSaUe&_nc_oc=Adned4RCPgvNp4Q5mvomLWNxgz2jSsDHSMXjFHVXZYcxS6lOSlxFdEbJXvHsH700q30&_nc_zt=23&_nc_ht=scontent.flbv4-1.fna&_nc_gid=tAF9UE47VMF8_0c2QO1M2g&oh=00_AfYfSzd3BQt0PGZwDFqjM-hYsZviBMMzICyf6U-AtKE1yA&oe=68BECA2C"
+                        src="/logo.jpg"
                         alt="FEGAMOD Logo"
                         className="h-10 w-10 object-contain"
                     />

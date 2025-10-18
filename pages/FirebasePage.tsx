@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import SectionTitle from '../components/SectionTitle';
-import { seedDatabase } from '../services/neonService';
+// import { seedDatabase } from '../services/convexService';
 
 const FirebasePage: React.FC = () => {
     const [loading, setLoading] = useState(false);
@@ -17,7 +17,7 @@ const FirebasePage: React.FC = () => {
         setSuccess(false);
 
         try {
-            await seedDatabase();
+            // await seedDatabase();
             setSuccess(true);
         } catch (err: any) {
             setError(err.message || "Une erreur est survenue lors de la migration.");

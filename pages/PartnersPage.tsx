@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getPartners } from '../services/neonService';
+import { usePartners } from '../services/convexService';
 import { Partner } from '../types';
 import SectionTitle from '../components/SectionTitle';
 import Loading from '../components/Loading';
@@ -11,24 +11,8 @@ const PartnerLogo: React.FC<{ partner: Partner }> = ({ partner }) => (
 );
 
 const PartnersPage: React.FC = () => {
-  const [partners, setPartners] = useState<Partner[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const loadPartners = async () => {
-      try {
-        const data = await getPartners();
-        setPartners(data);
-      } catch (err) {
-        setError("Impossible de charger les partenaires.");
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadPartners();
-  }, []);
+  const partners = usePartners();
+  const loading = !partners;
 
   return (
     <div className="bg-off-white py-20 bg-pattern">
@@ -40,8 +24,6 @@ const PartnersPage: React.FC = () => {
 
         {loading ? (
           <Loading message="Chargement des partenaires..." />
-        ) : error ? (
-          <p className="text-center text-red-500">{error}</p>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
             {partners.map(partner => (

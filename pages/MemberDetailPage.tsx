@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { getMemberById } from '../services/neonService';
+import { useMemberById } from '../services/convexService';
 import { Member } from '../types';
 import { MOCK_GALLERY_IMAGES } from '../gallery-constants';
 import SectionTitle from '../components/SectionTitle';
@@ -17,37 +17,18 @@ const SocialIcon: React.FC<{ platform: 'instagram' | 'facebook' | 'twitter'; hre
   return <a href={finalHref} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-metallic-gold transition-colors">{icons[platform]}</a>;
 };
 
-
 const MemberDetailPage: React.FC = () => {
     const { id } = useParams<{ id: string }>();
-    const [member, setMember] = useState<Member | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+    const member = useMemberById(id || '');
 
-    useEffect(() => {
-        if (id) {
-            const loadMember = async () => {
-                try {
-                    const data = await getMemberById(id);
-                    setMember(data);
-                } catch (err) {
-                    setError("Impossible de trouver ce membre.");
-                } finally {
-                    setLoading(false);
-                }
-            };
-            loadMember();
-        }
-    }, [id]);
-
-    if (loading) {
+    if (member === undefined) {
         return <div className="py-20"><Loading message="Chargement du profil..." /></div>;
     }
 
-    if (error || !member) {
+    if (!member) {
         return (
             <div className="py-20 text-center">
-                <h1 className="font-serif text-2xl font-bold text-red-600">{error || 'Membre non trouvé'}</h1>
+                <h1 className="font-serif text-2xl font-bold text-red-600">Membre non trouvé</h1>
                 <Link to="/membres" className="mt-4 inline-block text-emerald hover:underline">
                     Retour à l'annuaire
                 </Link>

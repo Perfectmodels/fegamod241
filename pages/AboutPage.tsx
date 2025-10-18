@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import SectionTitle from '../components/SectionTitle';
-import { getFounders } from '../services/neonService';
+import { useFounders } from '../services/convexService';
 import { MOCK_GALLERY_IMAGES } from '../gallery-constants';
 import { Founder } from '../types';
 import Loading from '../components/Loading';
@@ -18,24 +18,8 @@ const FounderCard: React.FC<{ founder: Founder }> = ({ founder }) => (
 
 
 const AboutPage: React.FC = () => {
-  const [founders, setFounders] = useState<Founder[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        const foundersData = await getFounders();
-        setFounders(foundersData);
-      } catch (err) {
-        setError("Impossible de charger les informations de l'équipe.");
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadData();
-  }, []);
+  const founders = useFounders();
+  const loading = !founders;
 
   return (
     <div className="bg-off-white py-20 bg-pattern">
@@ -84,8 +68,6 @@ const AboutPage: React.FC = () => {
           <SectionTitle subtitle="Notre Équipe">Organigramme</SectionTitle>
           {loading ? (
             <Loading message="Chargement de l'équipe..." />
-          ) : error ? (
-            <p className="text-red-500">{error}</p>
           ) : (
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
               {founders.map(founder => (

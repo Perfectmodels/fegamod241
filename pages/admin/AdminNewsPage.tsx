@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Article } from '../../types';
-import { getArticles, addArticle, updateArticle, deleteArticle } from '../../services/neonService';
+import { useArticles, useAddArticle, useUpdateArticle, useDeleteArticle } from '../../services/convexService';
 import Loading from '../../components/Loading';
 
 declare global {
@@ -8,24 +8,16 @@ declare global {
 }
 
 const AdminNewsPage: React.FC = () => {
-    const [articles, setArticles] = useState<Article[]>([]);
-    const [loading, setLoading] = useState(true);
+    const articles = useArticles();
+    const addArticle = useAddArticle();
+    const updateArticle = useUpdateArticle();
+    const deleteArticle = useDeleteArticle();
     const [error, setError] = useState<string | null>(null);
     const [view, setView] = useState<'list' | 'editor'>('list');
     const [currentArticle, setCurrentArticle] = useState<Omit<Article, 'id'> | Article | null>(null);
-    
+
     const fetchArticles = async () => {
-        setLoading(true);
-        try {
-            const data = await getArticles();
-            setArticles(data);
-            setError(null);
-        } catch (err) {
-            setError("Impossible de charger les articles.");
-            console.error(err);
-        } finally {
-            setLoading(false);
-        }
+        // Articles are now handled by the useArticles hook
     };
 
     useEffect(() => {
@@ -83,26 +75,25 @@ const AdminNewsPage: React.FC = () => {
         if (window.confirm('Êtes-vous sûr de vouloir supprimer cet article?')) {
             try {
                 await deleteArticle(id);
-                await fetchArticles(); // Refresh list
+                // Articles will automatically refresh via the useArticles hook
             } catch (err) {
                 alert("Erreur lors de la suppression de l'article.");
             }
         }
     };
-    
+
     const handleSave = async () => {
         if (!currentArticle) return;
-        
+
         const editorContent = window.tinymce.get('article-editor').getContent();
         const articleData = { ...currentArticle, content: editorContent };
-        
+
         try {
             if ('id' in articleData) {
-                await updateArticle(articleData.id, articleData);
+                await updateArticle({ id: articleData.id, ...articleData });
             } else {
                 await addArticle(articleData);
             }
-            await fetchArticles();
             setView('list');
             setCurrentArticle(null);
         } catch(err) {
@@ -170,7 +161,7 @@ const AdminNewsPage: React.FC = () => {
                 </button>
             </div>
             <div className="bg-white p-6 rounded-lg shadow-md">
-                {loading ? <Loading message="Chargement..." /> : error ? <p className="text-red-500">{error}</p> : (
+                {articles ? (
                     <table className="w-full text-left">
                         <thead className="border-b-2 border-gray-200">
                             <tr>
@@ -196,6 +187,8 @@ const AdminNewsPage: React.FC = () => {
                             ))}
                         </tbody>
                     </table>
+                ) : (
+                    <Loading message="Chargement..." />
                 )}
             </div>
         </div>

@@ -1,30 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { getMembers } from '../services/neonService';
+import { useMembers } from '../services/convexService';
 import { Member } from '../types';
 import SectionTitle from '../components/SectionTitle';
 import Loading from '../components/Loading';
 
 const MembersPage: React.FC = () => {
-  const [members, setMembers] = useState<Member[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const members = useMembers();
   const [activeCategory, setActiveCategory] = useState('Tous les membres');
 
-  useEffect(() => {
-    const loadMembers = async () => {
-      try {
-        const data = await getMembers();
-        setMembers(data);
-      } catch (err) {
-        setError("Impossible de charger l'annuaire des membres.");
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadMembers();
-  }, []);
+  if (members === undefined) {
+    return <Loading message="Chargement des membres..." />;
+  }
 
   const categories = ['Tous les membres', ...Array.from(new Set(members.map(m => m.category))).sort()];
 
@@ -58,24 +45,18 @@ const MembersPage: React.FC = () => {
         </div>
 
         {/* Members Grid */}
-        {loading ? (
-          <Loading message="Chargement des membres..." />
-        ) : error ? (
-          <p className="text-center text-red-500">{error}</p>
-        ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-6">
-            {filteredMembers.map(member => (
-              <Link to={`/membres/${member.id}`} key={member.id} className="group block overflow-hidden rounded-lg shadow-lg relative aspect-[4/5]">
-                <img src={member.imageUrl} alt={member.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
-                <div className="absolute inset-0 bg-gradient-to-t from-deep-black/80 via-deep-black/20 to-transparent"></div>
-                <div className="absolute bottom-0 left-0 p-3 w-full">
-                  <h3 className="font-serif text-sm md:text-base font-bold text-white truncate">{member.name}</h3>
-                  <p className="text-metallic-gold/80 text-xs md:text-sm font-semibold truncate">{member.category}</p>
-                </div>
-              </Link>
-            ))}
-          </div>
-        )}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-6">
+          {filteredMembers.map(member => (
+            <Link to={`/membres/${member.id}`} key={member.id} className="group block overflow-hidden rounded-lg shadow-lg relative aspect-[4/5]">
+              <img src={member.imageUrl} alt={member.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+              <div className="absolute inset-0 bg-gradient-to-t from-deep-black/80 via-deep-black/20 to-transparent"></div>
+              <div className="absolute bottom-0 left-0 p-3 w-full">
+                <h3 className="font-serif text-sm md:text-base font-bold text-white truncate">{member.name}</h3>
+                <p className="text-metallic-gold/80 text-xs md:text-sm font-semibold truncate">{member.category}</p>
+              </div>
+            </Link>
+          ))}
+        </div>
 
         {/* Adhesion Section */}
         <section className="mt-24 py-16 bg-deep-black rounded-lg text-off-white bg-pattern">

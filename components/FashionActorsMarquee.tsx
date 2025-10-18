@@ -1,25 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { getMembers } from '../services/neonService';
+import { useMembers } from '../services/convexService';
 
 const FashionActorsMarquee: React.FC = () => {
-    const [memberNames, setMemberNames] = useState<string[]>([]);
+    const members = useMembers();
 
     useEffect(() => {
-        const loadNames = async () => {
-            try {
-                const members = await getMembers();
-                setMemberNames(members.map(m => m.name));
-            } catch (error) {
-                console.error("Failed to load member names for marquee:", error);
-                // Can set a default list of names here if needed
-            }
-        };
-        loadNames();
+        // Members are now handled by the useMembers hook
     }, []);
 
-    if (!memberNames.length) {
+    if (!members || !members.length) {
         return null; // Or a loading state
     }
+
+    const memberNames = members.map(m => m.name);
 
     return (
         <section className="py-20 bg-deep-black text-off-white overflow-hidden">

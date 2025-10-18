@@ -1,9 +1,7 @@
-
-
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { NAV_LINKS } from '../constants';
-import { getSettings } from '../services/neonService';
+import { useSettings } from '../services/convexService';
 import type { SiteSettings } from '../types';
 
 const SocialIcon: React.FC<{ children: React.ReactNode; href: string }> = ({ children, href }) => (
@@ -13,19 +11,7 @@ const SocialIcon: React.FC<{ children: React.ReactNode; href: string }> = ({ chi
 );
 
 const Footer: React.FC = () => {
-  const [settings, setSettings] = useState<SiteSettings | null>(null);
-
-  useEffect(() => {
-    const fetchSettings = async () => {
-      try {
-        const settingsData = await getSettings();
-        setSettings(settingsData);
-      } catch (error) {
-        console.error("Failed to load settings for footer:", error);
-      }
-    };
-    fetchSettings();
-  }, []);
+  const settings = useSettings();
 
   return (
     <footer className="bg-deep-black text-off-white/80 pt-16 pb-8">
@@ -87,3 +73,4 @@ const Footer: React.FC = () => {
 };
 
 export default Footer;
+

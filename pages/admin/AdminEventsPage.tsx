@@ -1,28 +1,20 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { getEvents, addEvent, updateEvent, deleteEvent } from '../../services/neonService';
+import { useEvents, useAddEvent, useUpdateEvent, useDeleteEvent } from '../../services/convexService';
 import { Event } from '../../types';
 import Loading from '../../components/Loading';
 import AdminModal from '../../components/admin/AdminModal';
 
 const AdminEventsPage: React.FC = () => {
-    const [events, setEvents] = useState<Event[]>([]);
-    const [loading, setLoading] = useState(true);
+    const events = useEvents();
+    const addEvent = useAddEvent();
+    const updateEvent = useUpdateEvent();
+    const deleteEvent = useDeleteEvent();
     const [error, setError] = useState<string | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentEvent, setCurrentEvent] = useState<Omit<Event, 'id'> | Event | null>(null);
 
     const fetchEvents = useCallback(async () => {
-        setLoading(true);
-        try {
-            const data = await getEvents();
-            setEvents(data);
-            setError(null);
-        } catch (err) {
-            setError("Impossible de charger les événements.");
-            console.error(err);
-        } finally {
-            setLoading(false);
-        }
+        // Events are now handled by the useEvents hook
     }, []);
 
     useEffect(() => {
@@ -59,22 +51,20 @@ const AdminEventsPage: React.FC = () => {
         if (!currentEvent) return;
         try {
             if ('id' in currentEvent) {
-                await updateEvent(currentEvent.id, currentEvent);
+                await updateEvent({ id: currentEvent.id, ...currentEvent });
             } else {
                 await addEvent(currentEvent);
             }
-            fetchEvents();
             closeModal();
         } catch (err) {
             alert("Erreur lors de l'enregistrement de l'événement.");
         }
     };
-    
+
     const handleDelete = async (id: string) => {
         if (window.confirm("Êtes-vous sûr de vouloir supprimer cet événement?")) {
             try {
                 await deleteEvent(id);
-                fetchEvents();
             } catch (err) {
                 alert("Erreur lors de la suppression de l'événement.");
             }
@@ -90,11 +80,7 @@ const AdminEventsPage: React.FC = () => {
                 </button>
             </div>
              <div className="bg-white p-6 rounded-lg shadow-md">
-                {loading ? (
-                    <Loading message="Chargement..." />
-                ) : error ? (
-                    <p className="text-red-500">{error}</p>
-                ) : (
+                {events ? (
                     <div className="overflow-x-auto">
                         <table className="w-full text-left">
                             <thead className="border-b-2 border-gray-200">
@@ -122,6 +108,8 @@ const AdminEventsPage: React.FC = () => {
                             </tbody>
                         </table>
                     </div>
+                ) : (
+                    <Loading message="Chargement..." />
                 )}
             </div>
             

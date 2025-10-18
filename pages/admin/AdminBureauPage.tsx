@@ -1,34 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import Loading from '../../components/Loading';
 import { Founder } from '../../types';
-import { getFounders, addFounder, updateFounder, deleteFounder, seedDefaultBureau } from '../../services/neonService';
+// import { getFounders, addFounder, updateFounder, deleteFounder, seedDefaultBureau } from '../../services/neonService';
+import { useFounders, useAddFounder, useUpdateFounder, useDeleteFounder } from '../../services/convexService';
 
 const AdminBureauPage: React.FC = () => {
-    const [founders, setFounders] = useState<Founder[]>([]);
-    const [loading, setLoading] = useState(true);
+    const founders = useFounders();
+    const addFounder = useAddFounder();
+    const updateFounder = useUpdateFounder();
+    const deleteFounder = useDeleteFounder();
     const [error, setError] = useState<string | null>(null);
     const [editing, setEditing] = useState<Founder | null>(null);
     const [form, setForm] = useState<Omit<Founder, 'id'>>({ name: '', title: '', imageUrl: '' });
 
     const load = async () => {
-        setLoading(true);
-        setError(null);
-        try {
-            const rows = await getFounders();
-            setFounders(rows);
-        } catch (e) {
-            setError("Impossible de charger le bureau.");
-        } finally {
-            setLoading(false);
-        }
+        // Founders are now handled by the useFounders hook
     };
 
     useEffect(() => { load(); }, []);
 
     const handleSeed = async () => {
         try {
-            await seedDefaultBureau();
-            await load();
+            // await seedDefaultBureau();
+            // await load();
         } catch (e) {
             setError("Échec de l'initialisation du bureau.");
         }
@@ -53,14 +47,13 @@ const AdminBureauPage: React.FC = () => {
         e.preventDefault();
         try {
             if (editing) {
-                await updateFounder(editing.id, { ...editing, ...form });
+                await updateFounder({ id: editing.id, ...editing, ...form });
             } else {
                 const newId = `fnd_${Date.now()}`;
                 await addFounder({ ...form } as any);
             }
             setEditing(null);
             setForm({ name: '', title: '', imageUrl: '' });
-            await load();
         } catch (e) {
             setError('Enregistrement échoué.');
         }
@@ -68,10 +61,10 @@ const AdminBureauPage: React.FC = () => {
 
     const onDelete = async (id: string) => {
         if (!window.confirm('Supprimer cet élément ?')) return;
-        try { await deleteFounder(id); await load(); } catch { setError('Suppression échouée.'); }
+        try { await deleteFounder(id); } catch { setError('Suppression échouée.'); }
     };
 
-    if (loading) return <Loading message="Chargement du bureau..." />;
+    if (!founders) return <Loading message="Chargement du bureau..." />;
 
     return (
         <div className="p-6">

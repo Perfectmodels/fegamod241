@@ -1,6 +1,6 @@
-
 import React from 'react';
 import { Routes, Route, useLocation, Outlet, Navigate } from 'react-router-dom';
+import { ConvexProvider, ConvexReactClient } from 'convex/react';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
@@ -14,7 +14,6 @@ import GalleryPage from './pages/GalleryPage';
 import ContactPage from './pages/ContactPage';
 import FirebasePage from './pages/FirebasePage';
 
-// Admin Imports
 import AdminLayout from './components/admin/AdminLayout';
 import AdminLoginPage from './pages/admin/AdminLoginPage';
 import AdminDashboardPage from './pages/admin/AdminDashboardPage';
@@ -22,13 +21,19 @@ import AdminMembersPage from './pages/admin/AdminMembersPage';
 import AdminMemberDetailPage from './pages/admin/AdminMemberDetailPage';
 import AdminEventsPage from './pages/admin/AdminEventsPage';
 import AdminNewsPage from './pages/admin/AdminNewsPage';
-// FIX: Replaced incorrect import from './pages/admin/AdminPlaceholders' with correct individual imports. The AdminPlaceholders.tsx file was empty and not a module.
 import AdminMediaPage from './pages/admin/AdminMediaPage';
 import AdminPartnersPage from './pages/admin/AdminPartnersPage';
 import AdminUsersPage from './pages/admin/AdminUsersPage';
 import AdminSettingsPage from './pages/admin/AdminSettingsPage';
 import AdminBureauPage from './pages/admin/AdminBureauPage';
+import AdminTreasurerDashboard from './pages/admin/TreasurerDashboard';
+import PresidentDashboard from './pages/admin/PresidentDashboard';
+import SecretaryGeneralDashboard from './pages/admin/SecretaryGeneralDashboard';
+import RelationsPubliquesDashboard from './pages/admin/RelationsPubliquesDashboard';
 import { isAuthenticated } from './services/authService';
+
+// Initialize Convex client
+const convex = new ConvexReactClient("https://neat-buffalo-488.convex.cloud");
 
 // Public Layout
 const PublicLayout: React.FC = () => (
@@ -46,7 +51,6 @@ const ProtectedRoute: React.FC = () => {
     return isAuthenticated() ? <AdminLayout /> : <Navigate to="/admin/login" replace />;
 };
 
-
 const App: React.FC = () => {
   const location = useLocation();
 
@@ -57,37 +61,43 @@ const App: React.FC = () => {
   }, [location.pathname]);
 
   return (
-    <Routes>
-      {/* Public Routes */}
-      <Route element={<PublicLayout />}>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/a-propos" element={<AboutPage />} />
-        <Route path="/membres" element={<MembersPage />} />
-        <Route path="/membres/:id" element={<MemberDetailPage />} />
-        <Route path="/evenements" element={<EventsPage />} />
-        <Route path="/actualites" element={<NewsPage />} />
-        <Route path="/partenaires" element={<PartnersPage />} />
-        <Route path="/galerie" element={<GalleryPage />} />
-        <Route path="/contact" element={<ContactPage />} />
-      </Route>
+    <ConvexProvider client={convex}>
+      <Routes>
+        {/* Public Routes */}
+        <Route element={<PublicLayout />}>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/a-propos" element={<AboutPage />} />
+          <Route path="/membres" element={<MembersPage />} />
+          <Route path="/membres/:id" element={<MemberDetailPage />} />
+          <Route path="/evenements" element={<EventsPage />} />
+          <Route path="/actualites" element={<NewsPage />} />
+          <Route path="/partenaires" element={<PartnersPage />} />
+          <Route path="/galerie" element={<GalleryPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+        </Route>
 
-      {/* Admin Routes */}
-      <Route path="/admin/login" element={<AdminLoginPage />} />
-      <Route element={<ProtectedRoute />}>
-        <Route path="/admin" element={<AdminDashboardPage />} />
-        <Route path="/admin/dashboard" element={<Navigate to="/admin" replace />} />
-        <Route path="/admin/members" element={<AdminMembersPage />} />
-        <Route path="/admin/members/:id" element={<AdminMemberDetailPage />} />
-        <Route path="/admin/events" element={<AdminEventsPage />} />
-        <Route path="/admin/news" element={<AdminNewsPage />} />
-        <Route path="/admin/media" element={<AdminMediaPage />} />
-        <Route path="/admin/partners" element={<AdminPartnersPage />} />
-        <Route path="/admin/bureau" element={<AdminBureauPage />} />
-        <Route path="/admin/users" element={<AdminUsersPage />} />
-        <Route path="/admin/settings" element={<AdminSettingsPage />} />
-        <Route path="/admin/integration-data" element={<FirebasePage />} />
-      </Route>
-    </Routes>
+        {/* Admin Routes */}
+        <Route path="/admin/login" element={<AdminLoginPage />} />
+        <Route element={<ProtectedRoute />}>
+          <Route path="/admin" element={<AdminDashboardPage />} />
+          <Route path="/admin/dashboard" element={<Navigate to="/admin" replace />} />
+          <Route path="/admin/members" element={<AdminMembersPage />} />
+          <Route path="/admin/members/:id" element={<AdminMemberDetailPage />} />
+          <Route path="/admin/events" element={<AdminEventsPage />} />
+          <Route path="/admin/news" element={<AdminNewsPage />} />
+          <Route path="/admin/media" element={<AdminMediaPage />} />
+          <Route path="/admin/partners" element={<AdminPartnersPage />} />
+          <Route path="/admin/bureau" element={<AdminBureauPage />} />
+          <Route path="/admin/users" element={<AdminUsersPage />} />
+          <Route path="/admin/settings" element={<AdminSettingsPage />} />
+          <Route path="/admin/integration-data" element={<FirebasePage />} />
+          <Route path="/admin/president-dashboard" element={<PresidentDashboard />} />
+          <Route path="/admin/secretary-dashboard" element={<SecretaryGeneralDashboard />} />
+          <Route path="/admin/relations-dashboard" element={<RelationsPubliquesDashboard />} />
+          <Route path="/admin/treasurer-dashboard" element={<AdminTreasurerDashboard />} />
+        </Route>
+      </Routes>
+    </ConvexProvider>
   );
 };
 

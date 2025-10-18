@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { getEvents, getArticles } from '../services/neonService';
+import { useEvents, useArticles } from '../services/convexService';
 import { Event, Article } from '../types';
 import { MOCK_GALLERY_IMAGES } from '../gallery-constants';
 import SectionTitle from '../components/SectionTitle';
@@ -33,27 +33,9 @@ const Hero: React.FC = () => (
 );
 
 const HomePage: React.FC = () => {
-  const [events, setEvents] = useState<Event[]>([]);
-  const [articles, setArticles] = useState<Article[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [eventsData, articlesData] = await Promise.all([
-          getEvents(),
-          getArticles()
-        ]);
-        setEvents(eventsData);
-        setArticles(articlesData);
-      } catch (error) {
-        console.error("Failed to fetch homepage data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, []);
+  const events = useEvents();
+  const articles = useArticles();
+  const loading = !events || !articles;
 
   return (
     <div className="bg-off-white">

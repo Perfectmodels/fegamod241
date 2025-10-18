@@ -1,28 +1,20 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { getPartners, addPartner, updatePartner, deletePartner } from '../../services/neonService';
+import { usePartners, useAddPartner, useUpdatePartner, useDeletePartner } from '../../services/convexService';
 import { Partner } from '../../types';
 import Loading from '../../components/Loading';
 import AdminModal from '../../components/admin/AdminModal';
 
 const AdminPartnersPage: React.FC = () => {
-    const [partners, setPartners] = useState<Partner[]>([]);
-    const [loading, setLoading] = useState(true);
+    const partners = usePartners();
+    const addPartner = useAddPartner();
+    const updatePartner = useUpdatePartner();
+    const deletePartner = useDeletePartner();
     const [error, setError] = useState<string | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentPartner, setCurrentPartner] = useState<Omit<Partner, 'id'> | Partner | null>(null);
 
     const fetchPartners = useCallback(async () => {
-        setLoading(true);
-        try {
-            const data = await getPartners();
-            setPartners(data);
-            setError(null);
-        } catch (err) {
-            setError("Impossible de charger les partenaires.");
-            console.error(err);
-        } finally {
-            setLoading(false);
-        }
+        // Partners are now handled by the usePartners hook
     }, []);
 
     useEffect(() => {
@@ -42,7 +34,7 @@ const AdminPartnersPage: React.FC = () => {
         setIsModalOpen(false);
         setCurrentPartner(null);
     };
-    
+
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!currentPartner) return;
         const { name, value } = e.target;
@@ -53,22 +45,20 @@ const AdminPartnersPage: React.FC = () => {
         if (!currentPartner) return;
         try {
             if ('id' in currentPartner) {
-                await updatePartner(currentPartner.id, currentPartner);
+                await updatePartner({ id: currentPartner.id, ...currentPartner });
             } else {
                 await addPartner(currentPartner);
             }
-            fetchPartners();
             closeModal();
         } catch (err) {
             alert("Erreur lors de l'enregistrement du partenaire.");
         }
     };
-    
+
     const handleDelete = async (id: string) => {
         if (window.confirm("Êtes-vous sûr de vouloir supprimer ce partenaire?")) {
             try {
                 await deletePartner(id);
-                fetchPartners();
             } catch (err) {
                 alert("Erreur lors de la suppression du partenaire.");
             }
@@ -84,7 +74,7 @@ const AdminPartnersPage: React.FC = () => {
                 </button>
             </div>
             <div className="bg-white p-6 rounded-lg shadow-md">
-                {loading ? <Loading message="Chargement..." /> : error ? <p className="text-red-500">{error}</p> : (
+                {partners ? (
                     <table className="w-full text-left">
                         <thead className="border-b-2 border-gray-200">
                             <tr>
@@ -110,6 +100,8 @@ const AdminPartnersPage: React.FC = () => {
                             ))}
                         </tbody>
                     </table>
+                ) : (
+                    <Loading message="Chargement..." />
                 )}
             </div>
             

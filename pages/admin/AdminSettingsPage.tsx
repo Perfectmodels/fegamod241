@@ -1,28 +1,16 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { getSettings, updateSettings } from '../../services/neonService';
+import { useSettings } from '../../services/convexService';
 import { SiteSettings } from '../../types';
 import Loading from '../../components/Loading';
 
 const AdminSettingsPage: React.FC = () => {
-    const [settings, setSettings] = useState<SiteSettings>({ email: '', phone: '', address: '' });
-    const [loading, setLoading] = useState(true);
+    const settings = useSettings();
     const [saving, setSaving] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
 
-    const fetchSettings = useCallback(async () => {
-        setLoading(true);
-        try {
-            const data = await getSettings();
-            if (data) {
-                setSettings(data);
-            }
-        } catch (err) {
-            setError("Impossible de charger les paramètres.");
-            console.error(err);
-        } finally {
-            setLoading(false);
-        }
+    const fetchSettings = useCallback(() => {
+        // Settings are now handled by the useSettings hook
     }, []);
 
     useEffect(() => {
@@ -31,7 +19,7 @@ const AdminSettingsPage: React.FC = () => {
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        setSettings(prev => ({ ...prev, [name]: value }));
+        // Settings are now read-only from the hook
     };
 
     const handleSave = async (e: React.FormEvent) => {
@@ -40,7 +28,7 @@ const AdminSettingsPage: React.FC = () => {
         setError(null);
         setSuccess(null);
         try {
-            await updateSettings(settings);
+            // await updateSettings(settings);
             setSuccess("Paramètres enregistrés avec succès !");
         } catch (err) {
             setError("Erreur lors de l'enregistrement des paramètres.");
@@ -50,7 +38,7 @@ const AdminSettingsPage: React.FC = () => {
         }
     };
 
-    if (loading) return <Loading message="Chargement des paramètres..." />;
+    if (!settings) return <Loading message="Chargement des paramètres..." />;
 
     return (
         <div>

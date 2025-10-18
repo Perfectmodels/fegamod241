@@ -1,8 +1,6 @@
-
-
 import React, { useState, useEffect } from 'react';
 import SectionTitle from '../components/SectionTitle';
-import { getSettings } from '../services/neonService';
+import { useSettings } from '../services/convexService';
 import { SiteSettings } from '../types';
 
 const InfoCard: React.FC<{ icon: React.ReactNode; title: string; children: React.ReactNode }> = ({ icon, title, children }) => (
@@ -17,19 +15,7 @@ const InfoCard: React.FC<{ icon: React.ReactNode; title: string; children: React
 
 
 const ContactPage: React.FC = () => {
-    const [settings, setSettings] = useState<SiteSettings | null>(null);
-
-    useEffect(() => {
-        const fetchSettings = async () => {
-            try {
-                const settingsData = await getSettings();
-                setSettings(settingsData);
-            } catch (error) {
-                console.error("Failed to load settings for contact page:", error);
-            }
-        };
-        fetchSettings();
-    }, []);
+    const settings = useSettings();
 
   return (
     <div className="bg-off-white py-20 bg-pattern">

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { getArticles } from '../services/neonService';
+import { useArticles } from '../services/convexService';
 import { Article } from '../types';
 import SectionTitle from '../components/SectionTitle';
 import Loading from '../components/Loading';
@@ -22,24 +22,8 @@ const ArticleCard: React.FC<{ article: Article }> = ({ article }) => (
 );
 
 const NewsPage: React.FC = () => {
-  const [articles, setArticles] = useState<Article[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const loadArticles = async () => {
-      try {
-        const data = await getArticles();
-        setArticles(data);
-      } catch (err) {
-        setError("Impossible de charger les actualités.");
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadArticles();
-  }, []);
+  const articles = useArticles();
+  const loading = !articles;
 
   return (
     <div className="bg-off-white py-20">
@@ -50,8 +34,6 @@ const NewsPage: React.FC = () => {
         </p>
         {loading ? (
           <Loading message="Chargement des actualités..." />
-        ) : error ? (
-          <p className="text-center text-red-500">{error}</p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {articles.map(article => (

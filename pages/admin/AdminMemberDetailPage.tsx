@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { getFullMemberById } from '../../services/neonService';
+// import { getFullMemberById } from '../../services/neonService';
 import { FullMemberData } from '../../types';
 import Loading from '../../components/Loading';
 
@@ -21,8 +21,9 @@ const AdminMemberDetailPage: React.FC = () => {
         if (id) {
             const loadMember = async () => {
                 try {
-                    const data = await getFullMemberById(id);
-                    setMember(data);
+                    // const data = await getFullMemberById(id);
+                    // setMember(data);
+                    setMember(null); // Temporarily null until we implement proper data fetching
                 } catch (err) {
                     setError("Impossible de trouver ce membre.");
                 } finally {

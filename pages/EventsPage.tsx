@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getEvents } from '../services/neonService';
+import { useEvents } from '../services/convexService';
 import { Event } from '../types';
 import SectionTitle from '../components/SectionTitle';
 import Loading from '../components/Loading';
@@ -22,24 +22,8 @@ const EventCard: React.FC<{ event: Event, index: number }> = ({ event, index }) 
 );
 
 const EventsPage: React.FC = () => {
-  const [events, setEvents] = useState<Event[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const loadEvents = async () => {
-      try {
-        const data = await getEvents();
-        setEvents(data);
-      } catch (err) {
-        setError("Impossible de charger les événements.");
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadEvents();
-  }, []);
+  const events = useEvents();
+  const loading = !events;
 
 
   return (
@@ -52,8 +36,6 @@ const EventsPage: React.FC = () => {
 
         {loading ? (
           <Loading message="Chargement des événements..." />
-        ) : error ? (
-          <p className="text-center text-red-500">{error}</p>
         ) : (
           <div>
             {events.map((event, index) => (

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { getFullMembersData } from '../../services/neonService';
+// import { getFullMembersData } from '../../services/convexService';
 import { FullMemberData } from '../../types';
 import Loading from '../../components/Loading';
 
@@ -125,8 +125,9 @@ const AdminDashboardPage: React.FC = () => {
     useEffect(() => {
         const loadData = async () => {
             try {
-                const data = await getFullMembersData();
-                setMembers(data);
+                // const data = await getFullMembersData();
+                // setMembers(data);
+                setMembers([]); // Temporarily empty until we implement proper data fetching
             } catch (err) {
                 setError("Impossible de charger les données du tableau de bord.");
                 console.error(err);
