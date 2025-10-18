@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { signInWithEmail } from '../../services/authService';
+import { login } from '../../services/authService';
 
 const AdminLoginPage: React.FC = () => {
   const navigate = useNavigate();
@@ -15,7 +15,7 @@ const AdminLoginPage: React.FC = () => {
     setError(null);
 
     try {
-      await signInWithEmail(email, password);
+      await login(email, password);
       navigate('/admin');
     } catch (err: any) {
       setError(err.message);
