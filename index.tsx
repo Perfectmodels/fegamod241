@@ -17,3 +17,12 @@ root.render(
     </HashRouter>
   </React.StrictMode>
 );
+
+// Register a minimal service worker if available (progressive enhancement)
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(() => {
+      // ignore registration failures silently
+    });
+  });
+}

@@ -7,7 +7,7 @@ import Loading from '../components/Loading';
 const EventCard: React.FC<{ event: Event, index: number }> = ({ event, index }) => (
   <div className={`flex flex-col md:flex-row items-center bg-white rounded-lg shadow-lg overflow-hidden my-8 ${index % 2 === 1 ? 'md:flex-row-reverse' : ''}`}>
     <div className="md:w-1/2">
-      <img src={event.imageUrl} alt={event.title} className="w-full h-64 md:h-full object-cover"/>
+      <img src={event.imageUrl} alt={event.title} className="w-full h-64 md:h-full object-cover" loading="lazy" decoding="async"/>
     </div>
     <div className="md:w-1/2 p-8">
       <p className="text-sm text-emerald font-bold mb-2 tracking-widest">{event.date}</p>

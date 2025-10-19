@@ -1,9 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/jpeg" href="/logo.jpg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#007F5C" />
+    <meta http-equiv="x-ua-compatible" content="IE=edge" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
     <title>FEGAMOD - Fédération Gabonaise de la Mode</title>
     <meta name="description" content="FEGAMOD - Fédération Gabonaise de la Mode. Découvrez et soutenez la mode gabonaise, ses créateurs et événements. Promouvoir l'excellence et l'innovation dans l'industrie de la mode au Gabon." />
     <meta name="keywords" content="mode Gabon, Fédération Gabonaise de la Mode, fashion Gabon, créateurs mode, événements mode" />
@@ -16,6 +19,8 @@
     <meta property="og:title" content="FEGAMOD - Fédération Gabonaise de la Mode" />
     <meta property="og:description" content="Découvrez et soutenez la mode gabonaise avec FEGAMOD. Événements, créateurs et innovation dans l'industrie de la mode au Gabon." />
     <meta property="og:image" content="https://fegamod.ga/logo.jpg" />
+    <meta property="og:site_name" content="FEGAMOD" />
+    <meta property="og:locale" content="fr_FR" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -23,6 +28,14 @@
     <meta name="twitter:title" content="FEGAMOD - Fédération Gabonaise de la Mode" />
     <meta name="twitter:description" content="Découvrez et soutenez la mode gabonaise avec FEGAMOD. Événements, créateurs et innovation dans l'industrie de la mode au Gabon." />
     <meta name="twitter:image" content="https://fegamod.ga/logo.jpg" />
+
+    <!-- PWA / Mobile -->
+    <link rel="canonical" href="https://fegamod.ga/" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="FEGAMOD" />
+    <link rel="apple-touch-icon" href="/logo.jpg" />
 
     <!-- Structured Data (JSON-LD) for Organization -->
     <script type="application/ld+json">
@@ -87,6 +100,9 @@
 </head>
   <body class="bg-off-white text-deep-black font-sans antialiased">
     <div id="root"></div>
+    <noscript>
+      Merci d'activer JavaScript pour utiliser ce site.
+    </noscript>
     <script type="module" src="./index.tsx"></script>
   </body>
 </html>

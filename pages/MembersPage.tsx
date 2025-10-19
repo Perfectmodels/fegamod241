@@ -48,7 +48,7 @@ const MembersPage: React.FC = () => {
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-6">
           {filteredMembers.map(member => (
             <Link to={`/membres/${member.id}`} key={member.id} className="group block overflow-hidden rounded-lg shadow-lg relative aspect-[4/5]">
-              <img src={member.imageUrl} alt={member.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+              <img src={member.imageUrl} alt={member.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy" decoding="async" />
               <div className="absolute inset-0 bg-gradient-to-t from-deep-black/80 via-deep-black/20 to-transparent"></div>
               <div className="absolute bottom-0 left-0 p-3 w-full">
                 <h3 className="font-serif text-sm md:text-base font-bold text-white truncate">{member.name}</h3>

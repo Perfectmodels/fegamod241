@@ -12,6 +12,7 @@ const Hero: React.FC = () => (
     <div 
       className="absolute inset-0 bg-cover bg-center opacity-40" 
       style={{backgroundImage: `url('${MOCK_GALLERY_IMAGES[20]}')`}}
+      aria-hidden="true"
     ></div>
     <div className="relative z-10 p-4">
       <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl font-black mb-4 animate-fade-in-down">
@@ -57,8 +58,8 @@ const HomePage: React.FC = () => {
               </Link>
             </div>
             <div className="relative h-96">
-                <img src={MOCK_GALLERY_IMAGES[21]} alt="Fashion" className="absolute w-[80%] h-full object-cover rounded-lg shadow-2xl top-0 left-0"/>
-                <img src={MOCK_GALLERY_IMAGES[22]} alt="Style" className="absolute w-[50%] h-[70%] object-cover rounded-lg shadow-2xl bottom-0 right-0 border-8 border-off-white"/>
+                <img src={MOCK_GALLERY_IMAGES[21]} alt="Fashion" className="absolute w-[80%] h-full object-cover rounded-lg shadow-2xl top-0 left-0" loading="lazy" decoding="async"/>
+                <img src={MOCK_GALLERY_IMAGES[22]} alt="Style" className="absolute w-[50%] h-[70%] object-cover rounded-lg shadow-2xl bottom-0 right-0 border-8 border-off-white" loading="lazy" decoding="async"/>
             </div>
           </div>
         </div>
@@ -72,7 +73,7 @@ const HomePage: React.FC = () => {
             <div className="grid md:grid-cols-3 gap-8">
               {events.slice(0, 3).map(event => (
                 <div key={event.id} className="bg-white rounded-lg shadow-lg overflow-hidden group transform hover:-translate-y-2 transition-transform duration-300">
-                  <img src={event.imageUrl} alt={event.title} className="w-full h-56 object-cover"/>
+                  <img src={event.imageUrl} alt={event.title} className="w-full h-56 object-cover" loading="lazy" decoding="async"/>
                   <div className="p-6">
                     <p className="text-sm text-emerald font-semibold mb-2">{event.date} • {event.location}</p>
                     <h3 className="font-serif text-2xl font-bold mb-3">{event.title}</h3>
@@ -95,7 +96,7 @@ const HomePage: React.FC = () => {
             <div className="grid lg:grid-cols-3 gap-8">
               {articles.slice(0, 3).map(article => (
                 <div key={article.id} className="bg-white rounded-lg shadow-lg overflow-hidden group">
-                  <img src={article.imageUrl} alt={article.title} className="w-full h-56 object-cover"/>
+                  <img src={article.imageUrl} alt={article.title} className="w-full h-56 object-cover" loading="lazy" decoding="async"/>
                   <div className="p-6">
                     <p className="text-sm text-gray-500 mb-2">{article.category} • {article.date}</p>
                     <h3 className="font-serif text-xl font-bold mb-4 h-16">{article.title}</h3>

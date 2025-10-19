@@ -18,6 +18,8 @@ const GalleryPage: React.FC = () => {
                 src={src} 
                 alt={`Galerie FEGAMOD ${index + 1}`} 
                 className="w-full h-auto object-cover rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300"
+                loading="lazy"
+                decoding="async"
               />
             </div>
           ))}

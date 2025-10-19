@@ -47,7 +47,7 @@ const AboutPage: React.FC = () => {
             </ul>
           </div>
           <div>
-            <img src={MOCK_GALLERY_IMAGES[1]} alt="Atelier de couture" className="rounded-lg shadow-xl w-full h-auto object-cover"/>
+            <img src={MOCK_GALLERY_IMAGES[1]} alt="Atelier de couture" className="rounded-lg shadow-xl w-full h-auto object-cover" loading="lazy" decoding="async"/>
           </div>
         </div>
         
@@ -59,7 +59,7 @@ const AboutPage: React.FC = () => {
             </p>
           </div>
           <div className="md:order-1">
-             <img src={MOCK_GALLERY_IMAGES[2]} alt="Défilé de mode" className="rounded-lg shadow-xl w-full h-auto object-cover"/>
+             <img src={MOCK_GALLERY_IMAGES[2]} alt="Défilé de mode" className="rounded-lg shadow-xl w-full h-auto object-cover" loading="lazy" decoding="async"/>
           </div>
         </div>
 

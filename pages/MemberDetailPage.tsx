@@ -52,7 +52,7 @@ const MemberDetailPage: React.FC = () => {
                     <div className="bg-white rounded-lg shadow-xl overflow-hidden">
                         <div className="md:flex">
                             <div className="md:w-1/3">
-                                <img src={member.imageUrl} alt={member.name} className="w-full h-full object-cover"/>
+                                <img src={member.imageUrl} alt={member.name} className="w-full h-full object-cover" loading="lazy" decoding="async"/>
                             </div>
                             <div className="md:w-2/3 p-8 flex flex-col justify-center">
                                 <h1 className="font-serif text-4xl font-bold text-deep-black">{member.name}</h1>
@@ -74,7 +74,7 @@ const MemberDetailPage: React.FC = () => {
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                             {portfolioImages.map((src, index) => (
                                 <div key={index} className="overflow-hidden rounded-lg shadow-md aspect-[1/1]">
-                                    <img src={src} alt={`Portfolio ${index + 1}`} className="w-full h-full object-cover"/>
+                                    <img src={src} alt={`Portfolio ${index + 1}`} className="w-full h-full object-cover" loading="lazy" decoding="async"/>
                                 </div>
                             ))}
                         </div>
