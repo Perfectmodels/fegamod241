@@ -27,6 +27,7 @@ import AdminUsersPage from './pages/admin/AdminUsersPage';
 import AdminSettingsPage from './pages/admin/AdminSettingsPage';
 import AdminBureauPage from './pages/admin/AdminBureauPage';
 import AdminTreasurerDashboard from './pages/admin/TreasurerDashboard';
+import AdminNewsletterPage from './pages/admin/AdminNewsletterPage';
 import PresidentDashboard from './pages/admin/PresidentDashboard';
 import SecretaryGeneralDashboard from './pages/admin/SecretaryGeneralDashboard';
 import RelationsPubliquesDashboard from './pages/admin/RelationsPubliquesDashboard';
@@ -90,6 +91,7 @@ const App: React.FC = () => {
           <Route path="/admin/bureau" element={<AdminBureauPage />} />
           <Route path="/admin/users" element={<AdminUsersPage />} />
           <Route path="/admin/settings" element={<AdminSettingsPage />} />
+          <Route path="/admin/newsletter" element={<AdminNewsletterPage />} />
           <Route path="/admin/integration-data" element={<FirebasePage />} />
           <Route path="/admin/president-dashboard" element={<PresidentDashboard />} />
           <Route path="/admin/secretary-dashboard" element={<SecretaryGeneralDashboard />} />
