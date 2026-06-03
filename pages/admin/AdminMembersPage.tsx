@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useMembers, useDeleteMember } from '../../services/convexService';
+import { useMembers, useDeleteMember } from '../../services/firebaseService';
 import { FullMemberData } from '../../types';
 import Loading from '../../components/Loading';
 

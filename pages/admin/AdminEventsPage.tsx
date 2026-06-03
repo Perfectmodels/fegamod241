@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useEvents, useAddEvent, useUpdateEvent, useDeleteEvent } from '../../services/convexService';
+import { useEvents, useAddEvent, useUpdateEvent, useDeleteEvent } from '../../services/firebaseService';
 import { Event } from '../../types';
 import Loading from '../../components/Loading';
 import AdminModal from '../../components/admin/AdminModal';

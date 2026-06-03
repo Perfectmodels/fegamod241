@@ -1,6 +1,5 @@
 import React from 'react';
 import { Routes, Route, useLocation, Outlet, Navigate } from 'react-router-dom';
-import { ConvexProvider, ConvexReactClient } from 'convex/react';
 import ErrorBoundary from './components/ErrorBoundary';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -34,9 +33,6 @@ import SecretaryGeneralDashboard from './pages/admin/SecretaryGeneralDashboard';
 import RelationsPubliquesDashboard from './pages/admin/RelationsPubliquesDashboard';
 import { isAuthenticated } from './services/authService';
 
-// Initialize Convex client
-const convex = new ConvexReactClient("https://neat-buffalo-488.convex.cloud");
-
 // Public Layout
 const PublicLayout: React.FC = () => (
   <div className="flex flex-col min-h-screen bg-off-white">
@@ -63,9 +59,8 @@ const App: React.FC = () => {
   }, [location.pathname]);
 
   return (
-    <ConvexProvider client={convex}>
-      <ErrorBoundary>
-        <Routes>
+    <ErrorBoundary>
+      <Routes>
         {/* Public Routes */}
         <Route element={<PublicLayout />}>
           <Route path="/" element={<HomePage />} />
@@ -101,8 +96,7 @@ const App: React.FC = () => {
           <Route path="/admin/treasurer-dashboard" element={<AdminTreasurerDashboard />} />
         </Route>
       </Routes>
-      </ErrorBoundary>
-    </ConvexProvider>
+    </ErrorBoundary>
   );
 };
 

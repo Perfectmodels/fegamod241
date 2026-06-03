@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import SectionTitle from '../components/SectionTitle';
-import { useSettings } from '../services/convexService';
+import { useSettings } from '../services/firebaseService';
 import { SiteSettings } from '../types';
 
 const InfoCard: React.FC<{ icon: React.ReactNode; title: string; children: React.ReactNode }> = ({ icon, title, children }) => (
