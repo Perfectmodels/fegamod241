@@ -1,6 +1,7 @@
 import React from 'react';
 import { Routes, Route, useLocation, Outlet, Navigate } from 'react-router-dom';
 import { ConvexProvider, ConvexReactClient } from 'convex/react';
+import ErrorBoundary from './components/ErrorBoundary';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
@@ -63,7 +64,8 @@ const App: React.FC = () => {
 
   return (
     <ConvexProvider client={convex}>
-      <Routes>
+      <ErrorBoundary>
+        <Routes>
         {/* Public Routes */}
         <Route element={<PublicLayout />}>
           <Route path="/" element={<HomePage />} />
@@ -99,6 +101,7 @@ const App: React.FC = () => {
           <Route path="/admin/treasurer-dashboard" element={<AdminTreasurerDashboard />} />
         </Route>
       </Routes>
+      </ErrorBoundary>
     </ConvexProvider>
   );
 };
