@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useEvents, useArticles } from '../services/convexService';
+import { useEvents, useArticles } from '../services/firebaseService';
 import { Event, Article } from '../types';
 import { MOCK_GALLERY_IMAGES } from '../gallery-constants';
 import SectionTitle from '../components/SectionTitle';

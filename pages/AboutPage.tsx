@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import SectionTitle from '../components/SectionTitle';
-import { useFounders } from '../services/convexService';
+import { useFounders } from '../services/firebaseService';
 import { MOCK_GALLERY_IMAGES } from '../gallery-constants';
 import { Founder } from '../types';
 import Loading from '../components/Loading';

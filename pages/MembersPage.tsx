@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useMembers } from '../services/convexService';
+import { useMembers } from '../services/firebaseService';
 import { Member } from '../types';
 import SectionTitle from '../components/SectionTitle';
 import Loading from '../components/Loading';

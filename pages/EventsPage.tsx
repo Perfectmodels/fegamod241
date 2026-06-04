@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useEvents } from '../services/convexService';
+import { useEvents } from '../services/firebaseService';
 import { Event } from '../types';
 import SectionTitle from '../components/SectionTitle';
 import Loading from '../components/Loading';
